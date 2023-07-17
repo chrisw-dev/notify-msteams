@@ -81,6 +81,8 @@ function run() {
             // core.setOutput('time', new Date().toTimeString())
         }
         catch (error) {
+            console.log(error);
+            console.log("FAILURE");
             if (error instanceof Error)
                 core.setFailed(error.message);
         }
