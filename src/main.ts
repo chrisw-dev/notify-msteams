@@ -1,17 +1,56 @@
 import * as core from '@actions/core'
-import {wait} from './wait'
+// use octokit
+import {Octokit} from '@octokit/rest'
+
+// use axios
+import axios from 'axios'
+
+
+
+import {buildMessageCard} from './messagecard'
+import {escapeMarkdown} from './markdownhelper'
 
 async function run(): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
+    const githubToken = core.getInput('github-token', {required: true})
+    const teamsWebhookUrl = core.getInput('teams-webhook-url', {required: true})
+    const messageTitle = core.getInput('message-title', {required: true})
+    const messageBody = core.getInput('message-text', {required: true})
+    const messageColour = core.getInput('message-colour', {required: false}) || '00cbff'
+    
+    const [owner, repoName] = (process.env.GITHUB_REPOSITORY || '').split('/') // https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
+    const sha = process.env.GITHUB_SHA || ''
+    const runNumber = process.env.GITHUB_RUN_NUMBER || ''
+    const runId = process.env.GITHUB_RUN_ID || ''
+    const repoUrl = `https://github.com/${owner}/${repoName}`
+    const repoBranch = process.env.GITHUB_REF_NAME || ''
 
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
+    const octokit = new Octokit({auth: `token ${githubToken}`})
+    const params = {owner, repo: repoName, ref: sha}
+    const commit = await octokit.repos.getCommit(params)
+    const author = commit.data.author
 
-    core.setOutput('time', new Date().toTimeString())
-  } catch (error) {
+    const messageCard = buildMessageCard(
+      escapeMarkdown(messageTitle),
+      escapeMarkdown(messageBody),
+      messageColour,
+      author,
+      runNumber,
+      runId,
+      repoName,
+      repoUrl,
+      repoBranch
+    )
+
+    const response = await axios.post(teamsWebhookUrl, messageCard)
+    console.log(response)
+    core.debug(response.data)
+
+    core.debug(`Response: ${JSON.stringify(response.data)}`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
+
+    // core.setOutput('time', new Date().toTimeString())
+  }
+   catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }
 }
