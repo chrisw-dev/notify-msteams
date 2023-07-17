@@ -34,9 +34,13 @@ function run() {
             const runId = process.env.GITHUB_RUN_ID || '';
             const repoUrl = `https://github.com/${owner}/${repoName}`;
             const repoBranch = process.env.GITHUB_REF_NAME || '';
+            console.log(owner);
+            console.log(repoName);
+            console.log(sha);
             const octokit = new github.getOctokit(githubToken);
             const params = { owner, repo: repoName, ref: sha };
-            const commit = yield octokit.repos.getCommit(params);
+            console.log("about to get commit");
+            const commit = yield octokit.rest.repos.getCommit(params);
             const author = commit.data.author;
             const messageCard = buildMessageCard(escapeMarkdown(messageTitle), escapeMarkdown(messageBody), messageColour, author, runNumber, runId, repoName, repoUrl, repoBranch);
             const response = yield axios.post(teamsWebhookUrl, messageCard);
