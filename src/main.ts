@@ -1,10 +1,10 @@
-import {getOctokit} from '@actions/github'
-import core from '@actions/core'
+import * as github from '@actions/github'
+import * as core from '@actions/core'
 import axios from 'axios'
 import {buildMessageCard} from './messagecard'
 import {escapeMarkdown} from './markdownhelper'
 
-async function run(): Promise<void> {
+async function run() {
   try {
     const githubToken = core.getInput('github-token', {required: true})
     const teamsWebhookUrl = core.getInput('teams-webhook-url', {required: true})
@@ -23,7 +23,7 @@ async function run(): Promise<void> {
     console.log(repoName)
     console.log(sha)
 
-    const octokit = getOctokit(githubToken)
+    const octokit = github.getOctokit(githubToken)
     const params = {owner, repo: repoName, ref: sha}
     console.log("about to get commit")
     const commit = await octokit.rest.repos.getCommit(params)

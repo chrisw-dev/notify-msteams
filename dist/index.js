@@ -6,6 +6,29 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -19,19 +42,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const github_1 = __nccwpck_require__(5438);
-const core_1 = __importDefault(__nccwpck_require__(2186));
+const github = __importStar(__nccwpck_require__(5438));
+const core = __importStar(__nccwpck_require__(2186));
 const axios_1 = __importDefault(__nccwpck_require__(8757));
 const messagecard_1 = __nccwpck_require__(5454);
 const markdownhelper_1 = __nccwpck_require__(3712);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const githubToken = core_1.default.getInput('github-token', { required: true });
-            const teamsWebhookUrl = core_1.default.getInput('teams-webhook-url', { required: true });
-            const messageTitle = core_1.default.getInput('message-title', { required: true });
-            const messageBody = core_1.default.getInput('message-text', { required: true });
-            const messageColour = core_1.default.getInput('message-colour', { required: false }) || '00cbff';
+            const githubToken = core.getInput('github-token', { required: true });
+            const teamsWebhookUrl = core.getInput('teams-webhook-url', { required: true });
+            const messageTitle = core.getInput('message-title', { required: true });
+            const messageBody = core.getInput('message-text', { required: true });
+            const messageColour = core.getInput('message-colour', { required: false }) || '00cbff';
             const [owner, repoName] = (process.env.GITHUB_REPOSITORY || '').split('/'); // https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
             const sha = process.env.GITHUB_SHA || '';
             const runNumber = process.env.GITHUB_RUN_NUMBER || '';
@@ -41,7 +64,7 @@ function run() {
             console.log(owner);
             console.log(repoName);
             console.log(sha);
-            const octokit = (0, github_1.getOctokit)(githubToken);
+            const octokit = github.getOctokit(githubToken);
             const params = { owner, repo: repoName, ref: sha };
             console.log("about to get commit");
             const commit = yield octokit.rest.repos.getCommit(params);
@@ -49,13 +72,13 @@ function run() {
             const messageCard = (0, messagecard_1.buildMessageCard)((0, markdownhelper_1.escapeMarkdown)(messageTitle), (0, markdownhelper_1.escapeMarkdown)(messageBody), messageColour, author, runNumber, runId, repoName, repoUrl, repoBranch);
             const response = yield axios_1.default.post(teamsWebhookUrl, messageCard);
             console.log(response);
-            core_1.default.debug(response.data);
-            core_1.default.debug(`Response: ${JSON.stringify(response.data)}`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
+            core.debug(response.data);
+            core.debug(`Response: ${JSON.stringify(response.data)}`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
             // core.setOutput('time', new Date().toTimeString())
         }
         catch (error) {
             if (error instanceof Error)
-                core_1.default.setFailed(error.message);
+                core.setFailed(error.message);
         }
     });
 }
