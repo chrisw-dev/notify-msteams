@@ -1,5 +1,5 @@
 // write a function to build a message card to be returned
-export async function buildMessageCard(
+export function buildMessageCard(
     messageTitle: string, 
     messageBody: string,
     messageColour: string,
@@ -8,7 +8,7 @@ export async function buildMessageCard(
     runId: string,
     repoName: string,
     repoUrl: string,
-    repoBranch: string): Promise<any> {
+    repoBranch: string): any {
         let avatar_url = 'https://avatars.githubusercontent.com/u/105098969';
         if (author) {
             if (author.avatar_url) {

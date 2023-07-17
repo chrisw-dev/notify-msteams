@@ -4,7 +4,7 @@ import axios from 'axios'
 import {buildMessageCard} from './messagecard'
 import {escapeMarkdown} from './markdownhelper'
 
-async function run() {
+async function run(): Promise<void> {
   try {
     const githubToken = core.getInput('github-token', {required: true})
     const teamsWebhookUrl = core.getInput('teams-webhook-url', {required: true})
@@ -30,7 +30,7 @@ async function run() {
     const author = commit.data.author
     console.log(author)
 
-    const messageCard = buildMessageCard(
+    const messageCard = await buildMessageCard(
       escapeMarkdown(messageTitle),
       escapeMarkdown(messageBody),
       messageColour,

@@ -70,7 +70,7 @@ function run() {
             const commit = yield octokit.rest.repos.getCommit(params);
             const author = commit.data.author;
             console.log(author);
-            const messageCard = (0, messagecard_1.buildMessageCard)((0, markdownhelper_1.escapeMarkdown)(messageTitle), (0, markdownhelper_1.escapeMarkdown)(messageBody), messageColour, author, runNumber, runId, repoName, repoUrl, repoBranch);
+            const messageCard = yield (0, messagecard_1.buildMessageCard)((0, markdownhelper_1.escapeMarkdown)(messageTitle), (0, markdownhelper_1.escapeMarkdown)(messageBody), messageColour, author, runNumber, runId, repoName, repoUrl, repoBranch);
             console.log("sending message to Teams");
             console.log(teamsWebhookUrl);
             console.log(JSON.stringify(messageCard));
@@ -121,63 +121,52 @@ exports.escapeMarkdown = escapeMarkdown;
 /***/ }),
 
 /***/ 5454:
-/***/ (function(__unused_webpack_module, exports) {
+/***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
 
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.buildMessageCard = void 0;
 // write a function to build a message card to be returned
 function buildMessageCard(messageTitle, messageBody, messageColour, author, runNumber, runId, repoName, repoUrl, repoBranch) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let avatar_url = 'https://avatars.githubusercontent.com/u/105098969';
-        if (author) {
-            if (author.avatar_url) {
-                avatar_url = author.avatar_url;
-            }
+    let avatar_url = 'https://avatars.githubusercontent.com/u/105098969';
+    if (author) {
+        if (author.avatar_url) {
+            avatar_url = author.avatar_url;
         }
-        const card = {
-            '@type': 'MessageCard',
-            '@context': 'https://schema.org/extensions',
-            '$schema': 'https://adaptivecards.io/schemas/adaptive-card.json',
-            version: '1.0',
-            summary: messageTitle,
-            themeColor: messageColour,
-            title: messageTitle,
-            sections: [
-                {
-                    activityTitle: `[${repoName}](${repoUrl})`,
-                    activitySubtitle: `by [${author.login}](${author.html_url})`,
-                    activityImage: avatar_url,
-                    facts: [
-                        {
-                            name: 'Run Number',
-                            value: runNumber,
-                        },
-                        {
-                            name: 'Run ID',
-                            value: runId,
-                        },
-                        {
-                            name: 'Branch',
-                            value: repoBranch,
-                        }
-                    ],
-                    text: messageBody,
-                }
-            ],
-        };
-        return card;
-    });
+    }
+    const card = {
+        '@type': 'MessageCard',
+        '@context': 'https://schema.org/extensions',
+        '$schema': 'https://adaptivecards.io/schemas/adaptive-card.json',
+        version: '1.0',
+        summary: messageTitle,
+        themeColor: messageColour,
+        title: messageTitle,
+        sections: [
+            {
+                activityTitle: `[${repoName}](${repoUrl})`,
+                activitySubtitle: `by [${author.login}](${author.html_url})`,
+                activityImage: avatar_url,
+                facts: [
+                    {
+                        name: 'Run Number',
+                        value: runNumber,
+                    },
+                    {
+                        name: 'Run ID',
+                        value: runId,
+                    },
+                    {
+                        name: 'Branch',
+                        value: repoBranch,
+                    }
+                ],
+                text: messageBody,
+            }
+        ],
+    };
+    return card;
 }
 exports.buildMessageCard = buildMessageCard;
 
