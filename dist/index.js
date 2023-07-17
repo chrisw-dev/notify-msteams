@@ -74,7 +74,7 @@ function run() {
             console.log("sending message to Teams");
             console.log(teamsWebhookUrl);
             console.log(JSON.stringify(messageCard));
-            const response = yield axios_1.default.post(teamsWebhookUrl, JSON.stringify(messageCard));
+            const response = yield axios_1.default.post(teamsWebhookUrl, JSON.stringify(messageCard), { headers: { 'Content-Type': 'application/json' } });
             console.log(response);
             core.debug(response.data);
             core.debug(`Response: ${JSON.stringify(response.data)}`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true

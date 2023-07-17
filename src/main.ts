@@ -46,7 +46,7 @@ async function run(): Promise<void> {
     console.log(teamsWebhookUrl)
     console.log(JSON.stringify(messageCard))
 
-    const response = await axios.post(teamsWebhookUrl, JSON.stringify(messageCard))
+    const response = await axios.post(teamsWebhookUrl, JSON.stringify(messageCard), {headers: {'Content-Type': 'application/json'}})
     console.log(response)
     core.debug(response.data)
 
