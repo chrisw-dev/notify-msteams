@@ -73,8 +73,8 @@ function run() {
             const messageCard = (0, messagecard_1.buildMessageCard)((0, markdownhelper_1.escapeMarkdown)(messageTitle), (0, markdownhelper_1.escapeMarkdown)(messageBody), messageColour, author, runNumber, runId, repoName, repoUrl, repoBranch);
             console.log("sending message to Teams");
             console.log(teamsWebhookUrl);
-            console.log(messageCard);
-            const response = yield axios_1.default.post(teamsWebhookUrl, messageCard);
+            console.log(JSON.stringify(messageCard));
+            const response = yield axios_1.default.post(teamsWebhookUrl, JSON.stringify(messageCard));
             console.log(response);
             core.debug(response.data);
             core.debug(`Response: ${JSON.stringify(response.data)}`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true

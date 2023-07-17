@@ -44,9 +44,9 @@ async function run() {
 
     console.log("sending message to Teams")
     console.log(teamsWebhookUrl)
-    console.log(messageCard)
+    console.log(JSON.stringify(messageCard))
 
-    const response = await axios.post(teamsWebhookUrl, messageCard)
+    const response = await axios.post(teamsWebhookUrl, JSON.stringify(messageCard))
     console.log(response)
     core.debug(response.data)
 
