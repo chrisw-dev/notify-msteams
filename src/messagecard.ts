@@ -19,30 +19,30 @@ export function buildMessageCard(
             '@type': 'MessageCard',
             '@context': 'https://schema.org/extensions',
             '$schema': 'https://adaptivecards.io/schemas/adaptive-card.json',
-            version: '1.0',
-            summary: messageTitle,
-            themeColor: messageColour,
-            title: messageTitle,
-            sections: [
+            'version': '1.0',
+            'summary': messageTitle,
+            'themeColor': messageColour,
+            'title': messageTitle,
+            'sections': [
                 {
-                    activityTitle: `[${repoName}](${repoUrl})`,
-                    activitySubtitle: `by [${author.login}](${author.html_url})`,
-                    activityImage: avatar_url,
-                    facts: [
+                    'activityTitle': `[${repoName}](${repoUrl})`,
+                    'activitySubtitle': `by [${author.login}](${author.html_url})`,
+                    'activityImage': avatar_url,
+                    'facts': [
                         {
-                            name: 'Run Number',
-                            value: runNumber,
+                            'name': 'Run Number',
+                            'value': runNumber,
                         },
                         {
-                            name: 'Run ID',
-                            value: runId,
+                            'name': 'Run ID',
+                            'value': runId,
                         },
                         {
-                            name: 'Branch',
-                            value: repoBranch,
+                            'name': 'Branch',
+                            'value': repoBranch,
                         }
                     ],
-                    text: messageBody,
+                    'text': messageBody,
                 }
             ],
         };
