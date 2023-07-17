@@ -28,6 +28,7 @@ async function run() {
     console.log("about to get commit")
     const commit = await octokit.rest.repos.getCommit(params)
     const author = commit.data.author
+    console.log(author)
 
     const messageCard = buildMessageCard(
       escapeMarkdown(messageTitle),
@@ -40,6 +41,8 @@ async function run() {
       repoUrl,
       repoBranch
     )
+
+    console.log("sending message to Teams")
 
     const response = await axios.post(teamsWebhookUrl, messageCard)
     console.log(response)

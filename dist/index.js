@@ -69,7 +69,9 @@ function run() {
             console.log("about to get commit");
             const commit = yield octokit.rest.repos.getCommit(params);
             const author = commit.data.author;
+            console.log(author);
             const messageCard = (0, messagecard_1.buildMessageCard)((0, markdownhelper_1.escapeMarkdown)(messageTitle), (0, markdownhelper_1.escapeMarkdown)(messageBody), messageColour, author, runNumber, runId, repoName, repoUrl, repoBranch);
+            console.log("sending message to Teams");
             const response = yield axios_1.default.post(teamsWebhookUrl, messageCard);
             console.log(response);
             core.debug(response.data);
