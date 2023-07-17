@@ -72,6 +72,8 @@ function run() {
             console.log(author);
             const messageCard = (0, messagecard_1.buildMessageCard)((0, markdownhelper_1.escapeMarkdown)(messageTitle), (0, markdownhelper_1.escapeMarkdown)(messageBody), messageColour, author, runNumber, runId, repoName, repoUrl, repoBranch);
             console.log("sending message to Teams");
+            console.log(teamsWebhookUrl);
+            console.log(messageCard);
             const response = yield axios_1.default.post(teamsWebhookUrl, messageCard);
             console.log(response);
             core.debug(response.data);

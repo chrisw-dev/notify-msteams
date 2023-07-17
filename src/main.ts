@@ -43,6 +43,8 @@ async function run() {
     )
 
     console.log("sending message to Teams")
+    console.log(teamsWebhookUrl)
+    console.log(messageCard)
 
     const response = await axios.post(teamsWebhookUrl, messageCard)
     console.log(response)
