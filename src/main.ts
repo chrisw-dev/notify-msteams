@@ -1,8 +1,8 @@
-const github = require('@actions/github')
-const core = require('@actions/core')
-const axios = require('axios')
-const escapeMarkdown = require('./markdownhelper')
-const buildMessageCard = require('./messagecard')
+import {getOctokit} from '@actions/github'
+import core from '@actions/core'
+import axios from 'axios'
+import {buildMessageCard} from './messagecard'
+import {escapeMarkdown} from './markdownhelper'
 
 async function run(): Promise<void> {
   try {
@@ -23,7 +23,7 @@ async function run(): Promise<void> {
     console.log(repoName)
     console.log(sha)
 
-    const octokit = new github.getOctokit(githubToken)
+    const octokit = getOctokit(githubToken)
     const params = {owner, repo: repoName, ref: sha}
     console.log("about to get commit")
     const commit = await octokit.rest.repos.getCommit(params)
