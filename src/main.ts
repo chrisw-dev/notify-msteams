@@ -1,14 +1,8 @@
-import * as core from '@actions/core'
-// use octokit
-import {Octokit} from '@octokit/rest'
-
-// use axios
-import axios from 'axios'
-
-
-
-import {buildMessageCard} from './messagecard'
-import {escapeMarkdown} from './markdownhelper'
+const github = require('@actions/github')
+const core = require('@actions/core')
+const axios = require('axios')
+const escapeMarkdown = require('./markdownhelper')
+const buildMessageCard = require('./messagecard')
 
 async function run(): Promise<void> {
   try {
@@ -25,7 +19,7 @@ async function run(): Promise<void> {
     const repoUrl = `https://github.com/${owner}/${repoName}`
     const repoBranch = process.env.GITHUB_REF_NAME || ''
 
-    const octokit = new Octokit({auth: `token ${githubToken}`})
+    const octokit = new github.GitHub(githubToken)
     const params = {owner, repo: repoName, ref: sha}
     const commit = await octokit.repos.getCommit(params)
     const author = commit.data.author
