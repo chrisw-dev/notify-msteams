@@ -56,8 +56,8 @@ function run() {
             const teamsWebhookUrl = core.getInput('teams-webhook-url', { required: true });
             const messageTitle = core.getInput('message-title', { required: true });
             const messageBody = core.getInput('message-text', { required: true });
-            const messageColour = core.getInput('message-colour', { required: true });
-            const [owner, repoName] = (process.env.GITHUB_REPOSITORY || '').split('/'); //https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
+            const messageColour = core.getInput('message-colour', { required: false }) || '00cbff';
+            const [owner, repoName] = (process.env.GITHUB_REPOSITORY || '').split('/'); // https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables
             const sha = process.env.GITHUB_SHA || '';
             const runNumber = process.env.GITHUB_RUN_NUMBER || '';
             const runId = process.env.GITHUB_RUN_ID || '';

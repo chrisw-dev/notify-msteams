@@ -19,5 +19,5 @@ inputs:
     required: false
     description: 'The colour to use for the header line in the notification'
 runs:
-  using: 'node18'
+  using: 'node16'
   main: 'dist/index.js'
