@@ -61,28 +61,25 @@ function run() {
             const runId = process.env.GITHUB_RUN_ID || '';
             const repoUrl = `https://github.com/${owner}/${repoName}`;
             const repoBranch = process.env.GITHUB_REF_NAME || '';
-            console.log(owner);
-            console.log(repoName);
-            console.log(sha);
             const octokit = github.getOctokit(githubToken);
             const params = { owner, repo: repoName, ref: sha };
-            console.log("about to get commit");
             const commit = yield octokit.rest.repos.getCommit(params);
             const author = commit.data.author;
-            console.log(author);
-            const messageCard = yield (0, messagecard_1.buildMessageCard)((0, markdownhelper_1.escapeMarkdown)(messageTitle), (0, markdownhelper_1.escapeMarkdown)(messageBody), messageColour, author, runNumber, runId, repoName, repoUrl, repoBranch);
-            console.log("sending message to Teams");
-            console.log(teamsWebhookUrl);
-            console.log(JSON.stringify(messageCard));
+            let avatar_url = 'https://avatars.githubusercontent.com/u/105098969';
+            let login = 'Not provided';
+            let author_url = 'Not provided';
+            if (author) {
+                if (author.avatar_url) {
+                    avatar_url = author.avatar_url;
+                }
+                login = author.login;
+                author_url = author.html_url;
+            }
+            const messageCard = yield (0, messagecard_1.buildMessageCard)((0, markdownhelper_1.escapeMarkdown)(messageTitle), (0, markdownhelper_1.escapeMarkdown)(messageBody), messageColour, runNumber, runId, repoName, repoUrl, repoBranch, avatar_url, login, author_url);
             const response = yield axios_1.default.post(teamsWebhookUrl, JSON.stringify(messageCard), { headers: { 'Content-Type': 'application/json' } });
-            console.log(response);
-            core.debug(response.data);
             core.debug(`Response: ${JSON.stringify(response.data)}`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
-            // core.setOutput('time', new Date().toTimeString())
         }
         catch (error) {
-            console.log(error);
-            console.log("FAILURE");
             if (error instanceof Error)
                 core.setFailed(error.message);
         }
@@ -130,13 +127,7 @@ exports.escapeMarkdown = escapeMarkdown;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.buildMessageCard = void 0;
 // write a function to build a message card to be returned
-function buildMessageCard(messageTitle, messageBody, messageColour, author, runNumber, runId, repoName, repoUrl, repoBranch) {
-    let avatar_url = 'https://avatars.githubusercontent.com/u/105098969';
-    if (author) {
-        if (author.avatar_url) {
-            avatar_url = author.avatar_url;
-        }
-    }
+function buildMessageCard(messageTitle, messageBody, messageColour, runNumber, runId, repoName, repoUrl, repoBranch, avatar_url, login, author_url) {
     const card = {
         '@type': 'MessageCard',
         '@context': 'https://schema.org/extensions',
@@ -148,7 +139,7 @@ function buildMessageCard(messageTitle, messageBody, messageColour, author, runN
         'sections': [
             {
                 'activityTitle': `[${repoName}](${repoUrl})`,
-                'activitySubtitle': `by [${author.login}](${author.html_url})`,
+                'activitySubtitle': `by [${login}](${author_url})`,
                 'activityImage': avatar_url,
                 'facts': [
                     {

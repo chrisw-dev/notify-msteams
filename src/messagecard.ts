@@ -3,18 +3,15 @@ export function buildMessageCard(
     messageTitle: string, 
     messageBody: string,
     messageColour: string,
-    author: any,
     runNumber: string,
     runId: string,
     repoName: string,
     repoUrl: string,
-    repoBranch: string): any {
-        let avatar_url = 'https://avatars.githubusercontent.com/u/105098969';
-        if (author) {
-            if (author.avatar_url) {
-                avatar_url = author.avatar_url;
-            }
-        }
+    repoBranch: string,
+    avatar_url: string,
+    login: string,
+    author_url: string
+    ): any {
         const card = {
             '@type': 'MessageCard',
             '@context': 'https://schema.org/extensions',
@@ -26,7 +23,7 @@ export function buildMessageCard(
             'sections': [
                 {
                     'activityTitle': `[${repoName}](${repoUrl})`,
-                    'activitySubtitle': `by [${author.login}](${author.html_url})`,
+                    'activitySubtitle': `by [${login}](${author_url})`,
                     'activityImage': avatar_url,
                     'facts': [
                         {

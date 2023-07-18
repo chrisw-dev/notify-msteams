@@ -4,27 +4,31 @@ import * as cp from 'child_process'
 import * as path from 'path'
 import {expect, test} from '@jest/globals'
 
-test('wait 500 ms', async () => {
+test('test building a message card', async () => {
   const start = new Date()
   const messageTitle = 'This is a title'
   const messageBody = 'This is some text'
   const messageColour = 'HEXCOL'
-  const author = 'XXXXXX'
   const runNumber = 'XXXXXX'
   const runId = 'XXXXXX'
   const repoName = 'XXXXXX'
   const repoUrl = 'XXXXXX'
   const repoBranch = 'XXXXXX'
+  const avatar_url = 'XXXXXX'
+  const login = 'XXXXXX'
+  const author_url = 'XXXXXX'
   const message = await buildMessageCard(
     messageTitle, 
     messageBody, 
     messageColour, 
-    author, 
     runNumber, 
     runId, 
     repoName, 
     repoUrl, 
-    repoBranch)
+    repoBranch,
+    avatar_url,
+    login,
+    author_url)
   expect(message.summary).toBe(messageTitle)
 })
 

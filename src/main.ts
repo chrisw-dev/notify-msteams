@@ -19,44 +19,41 @@ async function run(): Promise<void> {
     const repoUrl = `https://github.com/${owner}/${repoName}`
     const repoBranch = process.env.GITHUB_REF_NAME || ''
 
-    console.log(owner)
-    console.log(repoName)
-    console.log(sha)
-
     const octokit = github.getOctokit(githubToken)
     const params = {owner, repo: repoName, ref: sha}
-    console.log("about to get commit")
     const commit = await octokit.rest.repos.getCommit(params)
     const author = commit.data.author
-    console.log(author)
+    let avatar_url = 'https://avatars.githubusercontent.com/u/105098969';
+    let login = 'Not provided';
+    let author_url = 'Not provided';
+    if (author) {
+        if (author.avatar_url) {
+            avatar_url = author.avatar_url;
+        }
+        login = author.login;
+        author_url = author.html_url;
+    }
 
     const messageCard = await buildMessageCard(
       escapeMarkdown(messageTitle),
       escapeMarkdown(messageBody),
       messageColour,
-      author,
       runNumber,
       runId,
       repoName,
       repoUrl,
-      repoBranch
+      repoBranch,
+      avatar_url,
+      login,
+      author_url
     )
 
-    console.log("sending message to Teams")
-    console.log(teamsWebhookUrl)
-    console.log(JSON.stringify(messageCard))
-
     const response = await axios.post(teamsWebhookUrl, JSON.stringify(messageCard), {headers: {'Content-Type': 'application/json'}})
-    console.log(response)
-    core.debug(response.data)
 
     core.debug(`Response: ${JSON.stringify(response.data)}`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
 
-    // core.setOutput('time', new Date().toTimeString())
   }
    catch (error) {
-    console.log(error)
-    console.log("FAILURE")
     if (error instanceof Error) core.setFailed(error.message)
   }
 }
