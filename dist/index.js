@@ -75,8 +75,10 @@ function run() {
                 login = author.login;
                 author_url = author.html_url;
             }
-            const messageCard = yield (0, messagecard_1.buildMessageCard)((0, markdownhelper_1.escapeMarkdown)(messageTitle), (0, markdownhelper_1.escapeMarkdown)(messageBody), messageColour, runNumber, runId, repoName, repoUrl, repoBranch, avatar_url, login, author_url);
-            const response = yield axios_1.default.post(teamsWebhookUrl, JSON.stringify(messageCard), { headers: { 'Content-Type': 'application/json' } });
+            const messageCard = (0, messagecard_1.buildMessageCard)((0, markdownhelper_1.escapeMarkdown)(messageTitle), (0, markdownhelper_1.escapeMarkdown)(messageBody), messageColour, runNumber, runId, repoName, repoUrl, repoBranch, avatar_url, login, author_url);
+            const response = yield axios_1.default.post(teamsWebhookUrl, messageCard, {
+                headers: { 'Content-Type': 'application/json' }
+            });
             core.debug(`Response: ${JSON.stringify(response.data)}`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
         }
         catch (error) {
@@ -101,20 +103,18 @@ exports.escapeMarkdown = void 0;
 // write a function to escape markdown
 function escapeMarkdown(text) {
     text
-        .replace(/[*_~`]/g, "\\$&")
-        .replace(/\n/g, "\\n")
-        .replace(/\r/g, "\\r")
-        .replace(/\[/g, "\\[")
-        .replace(/\]/g, "\\]")
-        .replace(/\(/g, "\\(")
-        .replace(/\)/g, "\\)")
-        .replace(/\{/g, "\\{")
-        .replace(/\}/g, "\\}")
-        .replace(/\!/g, "\\!");
+        .replace(/[*_~`]/g, '\\$&')
+        .replace(/\n/g, '\\n')
+        .replace(/\r/g, '\\r')
+        .replace(/\[/g, '\\[')
+        .replace(/\]/g, '\\]')
+        .replace(/\(/g, '\\(')
+        .replace(/\)/g, '\\)')
+        .replace(/\{/g, '\\{')
+        .replace(/\}/g, '\\}');
     return text;
 }
 exports.escapeMarkdown = escapeMarkdown;
-;
 
 
 /***/ }),
@@ -126,40 +126,39 @@ exports.escapeMarkdown = escapeMarkdown;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.buildMessageCard = void 0;
-// write a function to build a message card to be returned
 function buildMessageCard(messageTitle, messageBody, messageColour, runNumber, runId, repoName, repoUrl, repoBranch, avatar_url, login, author_url) {
     const card = {
         '@type': 'MessageCard',
         '@context': 'https://schema.org/extensions',
-        '$schema': 'https://adaptivecards.io/schemas/adaptive-card.json',
-        'version': '1.0',
-        'summary': messageTitle,
-        'themeColor': messageColour,
-        'title': messageTitle,
-        'sections': [
+        $schema: 'https://adaptivecards.io/schemas/adaptive-card.json',
+        version: '1.0',
+        summary: messageTitle,
+        themeColor: messageColour,
+        title: messageTitle,
+        sections: [
             {
-                'activityTitle': `[${repoName}](${repoUrl})`,
-                'activitySubtitle': `by [${login}](${author_url})`,
-                'activityImage': avatar_url,
-                'facts': [
+                activityTitle: `[${repoName}](${repoUrl})`,
+                activitySubtitle: `by [${login}](${author_url})`,
+                activityImage: avatar_url,
+                facts: [
                     {
-                        'name': 'Run Number',
-                        'value': runNumber,
+                        name: 'Run Number',
+                        value: runNumber
                     },
                     {
-                        'name': 'Run ID',
-                        'value': runId,
+                        name: 'Run ID',
+                        value: runId
                     },
                     {
-                        'name': 'Branch',
-                        'value': repoBranch,
+                        name: 'Branch',
+                        value: repoBranch
                     }
                 ],
-                'text': messageBody,
+                text: messageBody
             }
-        ],
+        ]
     };
-    return card;
+    return JSON.stringify(card);
 }
 exports.buildMessageCard = buildMessageCard;
 

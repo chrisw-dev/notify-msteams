@@ -5,7 +5,6 @@ import * as path from 'path'
 import {expect, test} from '@jest/globals'
 
 test('test building a message card', async () => {
-  const start = new Date()
   const messageTitle = 'This is a title'
   const messageBody = 'This is some text'
   const messageColour = 'HEXCOL'
@@ -17,19 +16,21 @@ test('test building a message card', async () => {
   const avatar_url = 'XXXXXX'
   const login = 'XXXXXX'
   const author_url = 'XXXXXX'
-  const message = await buildMessageCard(
-    messageTitle, 
-    messageBody, 
-    messageColour, 
-    runNumber, 
-    runId, 
-    repoName, 
-    repoUrl, 
+  const message = buildMessageCard(
+    messageTitle,
+    messageBody,
+    messageColour,
+    runNumber,
+    runId,
+    repoName,
+    repoUrl,
     repoBranch,
     avatar_url,
     login,
-    author_url)
-  expect(message.summary).toBe(messageTitle)
+    author_url
+  )
+  const messageJson = JSON.parse(message)
+  expect(messageJson.summary).toBe(messageTitle)
 })
 
 // shows how the runner will run a javascript action with env / stdout protocol
