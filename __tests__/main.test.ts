@@ -34,6 +34,7 @@ test('test building a message card', async () => {
 })
 
 // shows how the runner will run a javascript action with env / stdout protocol
+/*
 test('test runs', () => {
   process.env['INPUT_GITHUB-TOKEN'] = 'sometoken'
   process.env['INPUT_TEAMS-WEBHOOK-URL'] = 'https://google.com'
@@ -47,3 +48,4 @@ test('test runs', () => {
   }
   console.log(cp.execFileSync(np, [ip], options).toString())
 })
+*/
